@@ -20,17 +20,87 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Lottie Animation Component
 
-To learn more about Next.js, take a look at the following resources:
+This project includes a reusable Lottie animation component that you can easily integrate throughout your application.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Current Implementation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The `LoadingAnimation` component in `app/page.tsx` can be reused across your app:
 
-## Deploy on Vercel
+```tsx
+// From app/page.tsx
+function LoadingAnimation() {
+  return (
+    <div className="w-1/2 h-1/2">
+      <Lottie animationData={animationData} />
+    </div>
+  );
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Reusing the Component
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To reuse this component in other parts of your app:
+
+1. **Copy the component** to a new file (e.g., `components/LoadingAnimation.tsx`)
+2. **Import your animation data**:
+   ```tsx
+   import animationData from "@/public/climb_the_mountain.json";
+   ```
+3. **Use it anywhere**:
+
+   ```tsx
+   import LoadingAnimation from "@/components/LoadingAnimation";
+
+   function MyPage() {
+     return (
+       <div>
+         <h1>Welcome</h1>
+         <LoadingAnimation />
+       </div>
+     );
+   }
+   ```
+
+### Customizing the Component
+
+Modify the component to accept props for different use cases:
+
+```tsx
+// Enhanced version with props
+function LoadingAnimation({
+  size = "w-1/2 h-1/2",
+  animation = animationData
+}) {
+  return (
+    <div className={size}>
+      <Lottie animationData={animation} />
+    </div>
+  );
+}
+
+// Usage examples:
+<LoadingAnimation size="w-32 h-32" />
+<LoadingAnimation size="w-full h-64" />
+```
+
+### Adding New Animations
+
+1. Place your `.json` animation files in the `public/` directory
+2. Import them in your component:
+   ```tsx
+   import newAnimation from "@/public/your_animation.json";
+   ```
+3. Use with the existing component structure:
+   ```tsx
+   <div className="w-1/2 h-1/2">
+     <Lottie animationData={newAnimation} />
+   </div>
+   ```
+
+### Performance Tips
+
+- The current `w-1/2 h-1/2` sizing works well for responsive layouts
+- Consider using fixed dimensions (`w-64 h-64`) for consistent sizing across pages
+- The component automatically handles the Lottie animation lifecycle
